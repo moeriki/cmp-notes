@@ -1,0 +1,30 @@
+{
+	"$schema": "https://json.schemastore.org/eslintrc",
+	"extends": ["eslint:recommended", "plugin:unicorn/recommended"],
+	"env": { "node": true },
+	"parserOptions": {
+		"ecmaVersion": "latest",
+		"sourceType": "module"
+	},
+	"overrides": [
+		{
+			"files": ["**/*.ts"],
+			"extends": ["plugin:@typescript-eslint/recommended"],
+			"parser": "@typescript-eslint/parser"
+		},
+		{
+			"files": ["**/*.cjs"],
+			"parserOptions": {
+				"sourceType": "script"
+			},
+			"rules": {
+				"unicorn/prefer-module": "off"
+			}
+		},
+		{
+			"files": ["**/*"],
+			"extends": ["prettier"]
+		}
+	],
+	"plugins": ["unicorn"]
+}
