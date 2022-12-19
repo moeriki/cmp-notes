@@ -11,14 +11,28 @@ Resources:
     Properties:
       AccessControl: PublicRead
       BucketName: !Sub '${Prefix}-app-bucket'
-      CorsConfiguration:
-        CorsRules:
-          - AllowedHeaders: ['*']
-            AllowedMethods: ['GET']
-            AllowedOrigins: ['*']
-            MaxAge: 3000
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
       WebsiteConfiguration:
+        ErrorDocument: error.html
         IndexDocument: index.html
+
+  AppBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref AppBucket
+      PolicyDocument:
+        Id: AppBucketPublicRead
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Action: 's3:GetObject'
+            Effect: Allow
+            Principal: '*'
+            Resource: !Sub 'arn:aws:s3:::${AppBucket}/*'
+        Version: 2012-10-17
 
   AudioBucket:
     Type: 'AWS::S3::Bucket'
