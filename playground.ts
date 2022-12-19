@@ -1,14 +1,20 @@
-import aws from 'aws-sdk';
+import fs from 'node:fs';
 
-const s3 = new aws.S3({
-	region: 'eu-central-1',
-});
+import * as dotenv from 'dotenv';
 
-try {
-	const { Contents: bucketObjects = [] } = await s3
-		.listObjects({ Bucket: 'cmp-notes-bucket-mrk' })
-		.promise();
-	console.dir({ bucketObjects });
-} catch (error) {
-	console.error(error);
-}
+import * as storageService from './src/storage-service.js';
+
+dotenv.config();
+
+// try {
+// 	await s3Service.putObject('audio.m4a', fs.createReadStream('audio.m4a'));
+// 	await new Promise((resolve, reject) => {
+// 		s3Service
+// 			.getObject('audio.m4a')
+// 			.pipe(fs.createWriteStream('audio2.m4a'))
+// 			.once('error', reject)
+// 			.once('finish', resolve);
+// 	});
+// } catch (error) {
+// 	console.error(error);
+// }
