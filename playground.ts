@@ -1,11 +1,11 @@
-import cuid from 'cuid';
+// import cuid from 'cuid';
 import * as dotenv from 'dotenv';
 
-import * as notePersistenceService from './src/note-persistence-service';
+import { noteService } from './src/notes';
 
 dotenv.config();
 
-const userId = '681a1ee7-b18c-4757-99a5-ab4938fa5c90';
+// const userId = '681a1ee7-b18c-4757-99a5-ab4938fa5c90';
 
 try {
 	// await notePersistenceService.putNote({
@@ -14,7 +14,7 @@ try {
 	// 	userId,
 	// });
 	// const notes = await notePersistenceService.queryForUser(userId);
-	const notesIterable = await notePersistenceService.scan();
+	const notesIterable = await noteService.findAll();
 	for await (const notes of notesIterable) {
 		console.log(notes);
 	}

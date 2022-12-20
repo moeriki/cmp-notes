@@ -1,22 +1,18 @@
 import aws from 'aws-sdk';
-import { NotesTableName } from './constants.js';
+
+import { NotesTableName } from '../constants';
+import type { Note } from './types';
 
 const documentClient = new aws.DynamoDB.DocumentClient({
 	region: 'eu-central-1',
 });
 
-export interface PersistenceNote {
-	isFavorite?: boolean;
-	note: string;
-	noteId: string;
-	userId: string;
-}
-
-export async function putNote(note: PersistenceNote) {
+export async function put(note: Note): Promise<Note> {
 	await documentClient.put({ Item: note, TableName: NotesTableName }).promise();
+	return note;
 }
 
-export async function queryForUser(userId: string): Promise<PersistenceNote[]> {
+export async function queryForUser(userId: string): Promise<Note[]> {
 	const result = await documentClient
 		.query({
 			ExpressionAttributeValues: { ':userId': userId },
@@ -24,14 +20,14 @@ export async function queryForUser(userId: string): Promise<PersistenceNote[]> {
 			TableName: NotesTableName,
 		})
 		.promise();
-	return result.Items as PersistenceNote[];
+	return result.Items as Note[];
 }
 
 export async function* scan({
 	limit = 10,
 }: {
 	limit?: number;
-} = {}): AsyncGenerator<PersistenceNote[]> {
+} = {}): AsyncGenerator<Note[]> {
 	let hasNext = true;
 	const parameters: aws.DynamoDB.DocumentClient.ScanInput = {
 		Limit: limit,
@@ -39,7 +35,7 @@ export async function* scan({
 	};
 	do {
 		const result = await documentClient.scan(parameters).promise();
-		yield result.Items as PersistenceNote[];
+		yield result.Items as Note[];
 		hasNext = Boolean(result.LastEvaluatedKey);
 		if (hasNext) {
 			parameters.ExclusiveStartKey = result.LastEvaluatedKey;

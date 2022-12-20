@@ -1,12 +1,11 @@
 import fs from 'node:fs/promises';
 
-import type { PersistenceNote } from '../src/persistence-types';
-import * as notePersistenceService from '../src/note-persistence-service';
+import { noteService, type Note } from '../src/notes';
 
 const notes = JSON.parse(
 	await fs.readFile(new URL('notes.json', import.meta.url), 'utf8'),
-) as PersistenceNote[];
+) as Note[];
 
 for (const note of notes) {
-	notePersistenceService.putNote(note);
+	noteService.create(note);
 }
