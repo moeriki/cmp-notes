@@ -11,6 +11,19 @@ export interface PersistenceNote {
 	userId: string;
 }
 
+export async function findNotesForUser(
+	userId: string,
+): Promise<PersistenceNote[]> {
+	const result = await documentClient
+		.query({
+			ExpressionAttributeValues: { ':userId': userId },
+			KeyConditionExpression: 'userId = :userId',
+			TableName,
+		})
+		.promise();
+	return result.Items as PersistenceNote[];
+}
+
 export async function putNote(note: PersistenceNote) {
 	await documentClient
 		.put({
