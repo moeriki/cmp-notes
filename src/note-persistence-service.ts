@@ -26,3 +26,23 @@ export async function queryForUser(userId: string): Promise<PersistenceNote[]> {
 		.promise();
 	return result.Items as PersistenceNote[];
 }
+
+export async function* scan({
+	limit = 10,
+}: {
+	limit?: number;
+} = {}): AsyncGenerator<PersistenceNote[]> {
+	let hasNext = true;
+	const parameters: aws.DynamoDB.DocumentClient.ScanInput = {
+		Limit: limit,
+		TableName: NotesTableName,
+	};
+	do {
+		const result = await documentClient.scan(parameters).promise();
+		yield result.Items as PersistenceNote[];
+		hasNext = Boolean(result.LastEvaluatedKey);
+		if (hasNext) {
+			parameters.ExclusiveStartKey = result.LastEvaluatedKey;
+		}
+	} while (hasNext);
+}
