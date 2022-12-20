@@ -9,7 +9,7 @@ try {
 		'--stack-name',
 		stackName,
 		'--template-body',
-		'file://stack.yaml',
+		'file://infrastructure/stack.yaml',
 	]}`;
 } catch (error) {
 	if (error instanceof Error && error.message.includes('No updates')) {

@@ -61,6 +61,10 @@ Resources:
     Type: 'AWS::DynamoDB::Table'
     Properties:
       AttributeDefinitions:
+        # - AttributeName: isFavorite
+        #   AttributeType: B
+        # - AttributeName: note
+        #   AttributeType: S
         - AttributeName: noteId
           AttributeType: S
         - AttributeName: userId
