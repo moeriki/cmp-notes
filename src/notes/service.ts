@@ -30,11 +30,8 @@ export async function queryForUser(userId: string): Promise<Note[]> {
 }
 
 export async function update(note: Note): Promise<Note> {
-	if (note.isComplete) {
-		throw new Error('Cannot update a completed note');
-	}
 	return mapFromPersistence(
-		await persistenceService.put(mapToPersistence(note)),
+		await persistenceService.putIfIncomplete(mapToPersistence(note)),
 	);
 }
 

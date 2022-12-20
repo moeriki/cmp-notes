@@ -12,6 +12,20 @@ export async function put(note: PersistenceNote): Promise<PersistenceNote> {
 	return note;
 }
 
+export async function putIfIncomplete(
+	note: PersistenceNote,
+): Promise<PersistenceNote> {
+	await documentClient
+		.put({
+			ConditionExpression:
+				'attribute_not_exists(isComplete) OR isComplete = false',
+			Item: note,
+			TableName: NotesTableName,
+		})
+		.promise();
+	return note;
+}
+
 export async function queryForUser(userId: string): Promise<PersistenceNote[]> {
 	const result = await documentClient
 		.query({
