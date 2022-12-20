@@ -12,9 +12,11 @@ export interface PersistenceNote {
 	userId: string;
 }
 
-export async function findNotesForUser(
-	userId: string,
-): Promise<PersistenceNote[]> {
+export async function putNote(note: PersistenceNote) {
+	await documentClient.put({ Item: note, TableName: NotesTableName }).promise();
+}
+
+export async function queryForUser(userId: string): Promise<PersistenceNote[]> {
 	const result = await documentClient
 		.query({
 			ExpressionAttributeValues: { ':userId': userId },
@@ -23,8 +25,4 @@ export async function findNotesForUser(
 		})
 		.promise();
 	return result.Items as PersistenceNote[];
-}
-
-export async function putNote(note: PersistenceNote) {
-	await documentClient.put({ Item: note, TableName: NotesTableName }).promise();
 }

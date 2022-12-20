@@ -13,7 +13,7 @@ try {
 		noteId: cuid(),
 		userId,
 	});
-	const notes = await notePersistenceService.findNotesForUser(userId);
+	const notes = await notePersistenceService.queryForUser(userId);
 	console.log(notes);
 } catch (error) {
 	console.error(error);
