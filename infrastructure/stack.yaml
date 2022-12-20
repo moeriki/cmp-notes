@@ -57,27 +57,19 @@ Resources:
               - !Sub 'arn:aws:s3:::${AudioBucket}/*'
         Version: 2012-10-17
 
-  NoteTable:
+  NotesTable:
     Type: 'AWS::DynamoDB::Table'
     Properties:
       AttributeDefinitions:
-        # - AttributeName: isFavorite
-        #   AttributeType: B
-        # - AttributeName: note
-        #   AttributeType: S
-        - AttributeName: noteId
-          AttributeType: S
         - AttributeName: userId
           AttributeType: S
       KeySchema:
-        - AttributeName: noteId
-          KeyType: HASH
         - AttributeName: userId
-          KeyType: RANGE
+          KeyType: HASH
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      TableName: !Sub '${Prefix}-note-table'
+      TableName: !Sub '${Prefix}-notes-table'
 
 Outputs:
   WebsiteURL:

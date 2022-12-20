@@ -1,20 +1,20 @@
-import fs from 'node:fs';
-
+import cuid from 'cuid';
 import * as dotenv from 'dotenv';
 
-import * as storageService from './src/storage-service.js';
+import * as notePersistenceService from './src/note-persistence-service';
 
 dotenv.config();
 
-// try {
-// 	await s3Service.putObject('audio.m4a', fs.createReadStream('audio.m4a'));
-// 	await new Promise((resolve, reject) => {
-// 		s3Service
-// 			.getObject('audio.m4a')
-// 			.pipe(fs.createWriteStream('audio2.m4a'))
-// 			.once('error', reject)
-// 			.once('finish', resolve);
-// 	});
-// } catch (error) {
-// 	console.error(error);
-// }
+const userId = '681a1ee7-b18c-4757-99a5-ab4938fa5c90';
+
+try {
+	await notePersistenceService.putNote({
+		note: 'Hello, world!',
+		noteId: cuid(),
+		userId,
+	});
+	const notes = await notePersistenceService.findNotesForUser(userId);
+	console.log(notes);
+} catch (error) {
+	console.error(error);
+}

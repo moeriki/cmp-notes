@@ -1,8 +1,9 @@
 import aws from 'aws-sdk';
+import { NotesTableName } from './constants.js';
 
-const documentClient = new aws.DynamoDB.DocumentClient();
-
-const TableName = 'cmp-notes-mrk-note-table';
+const documentClient = new aws.DynamoDB.DocumentClient({
+	region: 'eu-central-1',
+});
 
 export interface PersistenceNote {
 	isFavorite?: boolean;
@@ -18,17 +19,12 @@ export async function findNotesForUser(
 		.query({
 			ExpressionAttributeValues: { ':userId': userId },
 			KeyConditionExpression: 'userId = :userId',
-			TableName,
+			TableName: NotesTableName,
 		})
 		.promise();
 	return result.Items as PersistenceNote[];
 }
 
 export async function putNote(note: PersistenceNote) {
-	await documentClient
-		.put({
-			TableName,
-			Item: note,
-		})
-		.promise();
+	await documentClient.put({ Item: note, TableName: NotesTableName }).promise();
 }

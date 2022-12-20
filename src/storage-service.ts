@@ -4,7 +4,9 @@ import aws from 'aws-sdk';
 
 const Bucket = 'cmp-notes-bucket-mrk';
 
-const s3 = new aws.S3();
+const s3 = new aws.S3({
+	region: 'eu-central-1',
+});
 
 export function getObject(Key: string) {
 	return s3.getObject({ Bucket, Key }).createReadStream();
