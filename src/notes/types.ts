@@ -5,3 +5,11 @@ export interface Note {
 	noteId: string;
 	userId: string;
 }
+
+export interface PersistenceNote {
+	isComplete?: string;
+	isFavorite?: boolean;
+	note: string;
+	noteId: string;
+	userId: string;
+}

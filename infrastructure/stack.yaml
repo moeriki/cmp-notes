@@ -61,6 +61,8 @@ Resources:
     Type: 'AWS::DynamoDB::Table'
     Properties:
       AttributeDefinitions:
+        - AttributeName: isComplete
+          AttributeType: S
         - AttributeName: noteId
           AttributeType: S
         - AttributeName: userId
@@ -70,10 +72,19 @@ Resources:
           KeyType: HASH
         - AttributeName: noteId
           KeyType: RANGE
+      LocalSecondaryIndexes:
+        - IndexName: Review
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+            - AttributeName: isComplete
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
-      TableName: !Sub '${Prefix}-notes-table-v3'
+      TableName: !Sub '${Prefix}-notes-table-v4'
 
 Outputs:
   WebsiteURL:
