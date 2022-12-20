@@ -71,8 +71,8 @@ Resources:
         - AttributeName: noteId
           KeyType: RANGE
       ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
       TableName: !Sub '${Prefix}-notes-table-v3'
 
 Outputs:
