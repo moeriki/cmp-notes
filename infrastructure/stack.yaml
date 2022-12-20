@@ -61,15 +61,19 @@ Resources:
     Type: 'AWS::DynamoDB::Table'
     Properties:
       AttributeDefinitions:
+        - AttributeName: noteId
+          AttributeType: S
         - AttributeName: userId
           AttributeType: S
       KeySchema:
         - AttributeName: userId
           KeyType: HASH
+        - AttributeName: noteId
+          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      TableName: !Sub '${Prefix}-notes-table'
+      TableName: !Sub '${Prefix}-notes-table-v3'
 
 Outputs:
   WebsiteURL:
