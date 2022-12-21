@@ -2,7 +2,7 @@ import { Readable } from 'node:stream';
 
 import aws from 'aws-sdk';
 
-const Bucket = 'cmp-notes-bucket-mrk';
+const Bucket = process.env.AUDIO_BUCKET_NAME!;
 
 const s3 = new aws.S3({
 	region: 'eu-central-1',

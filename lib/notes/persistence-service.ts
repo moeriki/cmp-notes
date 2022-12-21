@@ -1,7 +1,8 @@
 import aws from 'aws-sdk';
 
-import { NotesTableName } from '../constants.js';
 import type { PersistenceNote } from './types.js';
+
+const TableName = process.env.NOTES_TABLE_NAME!;
 
 const documentClient = new aws.DynamoDB.DocumentClient({
 	region: 'eu-central-1',
@@ -13,7 +14,7 @@ export async function put(note: PersistenceNote): Promise<PersistenceNote> {
 			ConditionExpression:
 				'attribute_not_exists(isComplete) OR isComplete = false',
 			Item: note,
-			TableName: NotesTableName,
+			TableName,
 		})
 		.promise();
 	return note;
@@ -24,7 +25,7 @@ export async function queryForUser(userId: string): Promise<PersistenceNote[]> {
 		.query({
 			ExpressionAttributeValues: { ':userId': userId },
 			KeyConditionExpression: 'userId = :userId',
-			TableName: NotesTableName,
+			TableName,
 		})
 		.promise();
 	return result.Items as PersistenceNote[];
@@ -38,7 +39,7 @@ export async function* scan({
 	let hasNext = true;
 	const parameters: aws.DynamoDB.DocumentClient.ScanInput = {
 		Limit: limit,
-		TableName: NotesTableName,
+		TableName,
 	};
 	do {
 		const result = await documentClient.scan(parameters).promise();
