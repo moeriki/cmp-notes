@@ -1,7 +1,7 @@
 // import cuid from 'cuid';
 import * as dotenv from 'dotenv';
 
-import { noteService } from './src/notes';
+import { findAllNotes } from '@doa/lib';
 
 dotenv.config();
 
@@ -14,7 +14,7 @@ try {
 	// 	userId,
 	// });
 	// const notes = await notePersistenceService.queryForUser(userId);
-	const notesIterable = await noteService.findAll();
+	const notesIterable = await findAllNotes();
 	for await (const notes of notesIterable) {
 		console.log(notes);
 	}

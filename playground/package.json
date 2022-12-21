@@ -1,0 +1,19 @@
+{
+	"name": "developing-on-aws",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "tsx --watch index.ts"
+	},
+	"dependencies": {
+		"@doa/lib": "workspace:*",
+		"cuid": "^2.1.8"
+	},
+	"devDependencies": {
+		"@types/node": "^18.11.17",
+		"dotenv": "^16.0.3",
+		"tsx": "^3.12.1",
+		"typescript": "^4.9.4"
+	}
+}

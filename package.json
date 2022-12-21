@@ -3,26 +3,22 @@
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
+	"engines": {
+		"node": "^18"
+	},
 	"scripts": {
-		"dev:playground": "tsx --watch playground.ts",
+		"build": "pnpm run -r build",
 		"format": "prettier --write .",
 		"lint": "eslint ."
 	},
-	"dependencies": {
-		"aws-sdk": "^2.1277.0",
-		"cuid": "^2.1.8",
-		"dotenv": "^16.0.3",
-		"typescript": "^4.9.4"
-	},
 	"devDependencies": {
-		"@types/node": "^18.11.17",
 		"@typescript-eslint/eslint-plugin": "^5.46.1",
 		"@typescript-eslint/parser": "^5.46.1",
 		"eslint": "^8.30.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-unicorn": "^45.0.2",
 		"prettier": "^2.8.1",
-		"tsx": "^3.12.1",
-		"zx": "^7.1.1"
+		"tsup": "^6.5.0",
+		"typescript": "^4.9.4"
 	}
 }

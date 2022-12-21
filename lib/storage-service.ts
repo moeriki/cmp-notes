@@ -8,17 +8,17 @@ const s3 = new aws.S3({
 	region: 'eu-central-1',
 });
 
-export function getObject(Key: string) {
+export function getStorageObject(Key: string) {
 	return s3.getObject({ Bucket, Key }).createReadStream();
 }
 
-export async function listObjects() {
+export async function listStorageObjects() {
 	const { Contents: bucketObjects = [] } = await s3
 		.listObjects({ Bucket })
 		.promise();
 	return bucketObjects;
 }
 
-export async function putObject(Key: string, Body: Readable) {
+export async function putStorageObject(Key: string, Body: Readable) {
 	await s3.putObject({ Bucket, Key, Body }).promise();
 }

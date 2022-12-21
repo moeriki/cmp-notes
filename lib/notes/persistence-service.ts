@@ -1,20 +1,13 @@
 import aws from 'aws-sdk';
 
-import { NotesTableName } from '../constants';
-import type { PersistenceNote } from './types';
+import { NotesTableName } from '../constants.js';
+import type { PersistenceNote } from './types.js';
 
 const documentClient = new aws.DynamoDB.DocumentClient({
 	region: 'eu-central-1',
 });
 
 export async function put(note: PersistenceNote): Promise<PersistenceNote> {
-	await documentClient.put({ Item: note, TableName: NotesTableName }).promise();
-	return note;
-}
-
-export async function putIfIncomplete(
-	note: PersistenceNote,
-): Promise<PersistenceNote> {
 	await documentClient
 		.put({
 			ConditionExpression:

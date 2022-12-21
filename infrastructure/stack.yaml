@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 
 Parameters:
   Prefix:
@@ -6,6 +7,111 @@ Parameters:
     Default: cmp-notes-mrk
 
 Resources:
+  ApiDeleteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/delete/dist
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Method: DELETE
+            Path: /:id
+      Handler: index.handler
+      Role: !GetAtt ApiExecutionRole.Arn
+      Runtime: nodejs18.x
+
+  ApiExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: 'Allow'
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+      Policies:
+        - PolicyName: !Sub '${Prefix}-api-policy'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: 'Allow'
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: '*'
+              - Effect: 'Allow'
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:Query'
+                  - 'dynamodb:Scan'
+                Resource:
+                  - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${NotesTable}'
+                  - !Sub 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${NotesTable}/index/*'
+      RoleName: !Sub '${Prefix}-api-execution-role'
+
+  ApiDictateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/dictate/dist
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Method: POST
+            Path: /dictate
+      Handler: index.handler
+      Role: !GetAtt ApiExecutionRole.Arn
+      Runtime: nodejs18.x
+
+  ApiListFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/list/dist
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Method: GET
+            Path: /
+      Handler: index.handler
+      Role: !GetAtt ApiExecutionRole.Arn
+      Runtime: nodejs18.x
+
+  ApiPutFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/put/dist
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Path: /:id
+            Method: PUT
+      Handler: index.handler
+      Role: !GetAtt ApiExecutionRole.Arn
+      Runtime: nodejs18.x
+
+  ApiSearchFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/search/dist
+      Events:
+        ApiEvent:
+          Type: HttpApi
+          Properties:
+            Method: GET
+            Path: /search
+      Handler: index.handler
+      Role: !GetAtt ApiExecutionRole.Arn
+      Runtime: nodejs18.x
+
   AppBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -37,6 +143,7 @@ Resources:
   AudioBucket:
     Type: 'AWS::S3::Bucket'
     Properties:
+      AccessControl: Private
       BucketName: !Sub '${Prefix}-audio-bucket'
 
   AudioBucketPolicy:
