@@ -7,6 +7,9 @@ Parameters:
     Default: cmp-notes-mrk
 
 Resources:
+  Api:
+    Type: AWS::Serverless::HttpApi
+
   ApiDeleteFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -15,6 +18,7 @@ Resources:
         ApiEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref Api
             Method: DELETE
             Path: /:id
       Handler: index.handler
@@ -64,6 +68,7 @@ Resources:
         ApiEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref Api
             Method: POST
             Path: /dictate
       Handler: index.handler
@@ -78,6 +83,7 @@ Resources:
         ApiEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref Api
             Method: GET
             Path: /
       Handler: index.handler
@@ -92,8 +98,9 @@ Resources:
         ApiEvent:
           Type: HttpApi
           Properties:
-            Path: /:id
+            ApiId: !Ref Api
             Method: PUT
+            Path: /:id
       Handler: index.handler
       Role: !GetAtt ApiExecutionRole.Arn
       Runtime: nodejs18.x
@@ -106,6 +113,7 @@ Resources:
         ApiEvent:
           Type: HttpApi
           Properties:
+            ApiId: !Ref Api
             Method: GET
             Path: /search
       Handler: index.handler
@@ -194,5 +202,7 @@ Resources:
       TableName: !Sub '${Prefix}-notes-table-v4'
 
 Outputs:
-  WebsiteURL:
+  ApiUrl:
+    Value: !Sub 'https://${Api}.execute-api.${AWS::Region}.${AWS::URLSuffix}/'
+  WebsiteUrl:
     Value: !GetAtt [AppBucket, 'WebsiteURL']
